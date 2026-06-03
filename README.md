@@ -62,11 +62,28 @@ API = "sk-secureai-your-key"
 
 print(AI.AskAI(API)["What is DGX Spark?"])
 
+print(AI.AskAI(API, search=True)["latest DGX Spark news with sources"])
+
 for token in AI.StreamAI(API)["Tell me what DGX Spark is"]:
+    print(token, end="", flush=True)
+
+for token in AI.StreamAI(API, search=True)["latest DGX Spark news with sources"]:
     print(token, end="", flush=True)
 
 for letter in AI.StreamLettersAI(API)["Say hello"]:
     print(letter, end="", flush=True)
+```
+
+Auto-search terminal chat:
+
+```bash
+python3 examples/auto_search_chat.py
+```
+
+Persistent memory terminal chat:
+
+```bash
+python3 examples/auto_search_persistent_memory_chat.py
 ```
 
 ## Notes

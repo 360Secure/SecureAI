@@ -1,0 +1,15 @@
+[Unit]
+Description=VLM Smart Telegram Bot
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/secure360
+EnvironmentFile=/home/secure360/secureai-telegram-bot.env
+ExecStart=/usr/bin/python3 /home/secure360/telegram_vlm_bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

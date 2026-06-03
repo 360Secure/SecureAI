@@ -32,7 +32,7 @@ class SecureAI:
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
-        model: str = "qwen72b-vl",
+        model: str = "qwen32b",
         timeout: float = 120.0,
     ) -> None:
         self.api_key = api_key or os.getenv("SECUREAI_API_KEY") or os.getenv("OPENAI_API_KEY")
@@ -48,6 +48,8 @@ class SecureAI:
         model: Optional[str] = None,
         temperature: float = 0.2,
         max_tokens: Optional[int] = None,
+        search: bool = False,
+        search_count: int = 6,
         **extra: Any,
     ) -> str:
         response = self.chat(
@@ -56,6 +58,8 @@ class SecureAI:
             model=model,
             temperature=temperature,
             max_tokens=max_tokens,
+            search=search,
+            search_count=search_count,
             **extra,
         )
         return response["choices"][0]["message"]["content"]
@@ -68,6 +72,8 @@ class SecureAI:
         model: Optional[str] = None,
         temperature: float = 0.2,
         max_tokens: Optional[int] = None,
+        search: bool = False,
+        search_count: int = 6,
         **extra: Any,
     ) -> Dict[str, Any]:
         messages = self._messages(prompt, system=system)
@@ -79,6 +85,9 @@ class SecureAI:
         }
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
+        if search or extra.pop("web_search", False):
+            payload["web_search"] = True
+            payload["search_count"] = search_count
 
         with httpx.Client(timeout=self.timeout) as client:
             res = client.post(
@@ -96,6 +105,8 @@ class SecureAI:
         model: Optional[str] = None,
         temperature: float = 0.2,
         max_tokens: Optional[int] = None,
+        search: bool = False,
+        search_count: int = 6,
         **extra: Any,
     ) -> Iterable[str]:
         messages = self._messages(prompt, system=system)
@@ -108,6 +119,9 @@ class SecureAI:
         }
         if max_tokens is not None:
             payload["max_tokens"] = max_tokens
+        if search or extra.pop("web_search", False):
+            payload["web_search"] = True
+            payload["search_count"] = search_count
 
         with httpx.stream(
             "POST",
@@ -163,6 +177,24 @@ class SecureAI:
         )
         return self.ask(messages, model=model, temperature=temperature)
 
+    def annotate_image(
+        self,
+        image_url: str,
+        *,
+        instruction: str = "circle all humans",
+        color: str = "red",
+    ) -> bytes:
+        payload = {"image_url": image_url, "instruction": instruction, "color": color}
+        with httpx.Client(timeout=self.timeout) as client:
+            res = client.post(
+                f"{self.base_url}/annotate-image",
+                headers=self._headers(),
+                json=payload,
+            )
+        if res.status_code >= 400:
+            raise SecureAIError(res.text)
+        return res.content
+
     def models(self) -> Dict[str, Any]:
         with httpx.Client(timeout=self.timeout) as client:
             res = client.get(f"{self.base_url}/models", headers=self._headers())
@@ -199,15 +231,19 @@ class _Command:
         api_key: Optional[str] = None,
         *,
         base_url: Optional[str] = None,
-        model: str = "qwen72b-vl",
+        model: str = "qwen32b",
         system: Optional[str] = None,
         temperature: float = 0.2,
         max_tokens: Optional[int] = None,
+        search: bool = False,
+        search_count: int = 6,
     ) -> None:
         self.client = SecureAI(api_key=api_key or API, base_url=base_url, model=model)
         self.system = system
         self.temperature = temperature
         self.max_tokens = max_tokens
+        self.search = search
+        self.search_count = search_count
 
     def _prompt(self, value: Any) -> Any:
         if isinstance(value, tuple):
@@ -224,6 +260,8 @@ class AskAI(_Command):
             system=self.system,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
+            search=self.search,
+            search_count=self.search_count,
         )
 
 
@@ -236,6 +274,8 @@ class ChatAI(_Command):
             system=self.system,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
+            search=self.search,
+            search_count=self.search_count,
         )
 
 
@@ -248,6 +288,8 @@ class StreamAI(_Command):
             system=self.system,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
+            search=self.search,
+            search_count=self.search_count,
         )
 
 
@@ -260,6 +302,8 @@ class StreamLettersAI(_Command):
             system=self.system,
             temperature=self.temperature,
             max_tokens=self.max_tokens,
+            search=self.search,
+            search_count=self.search_count,
         )
 
 
