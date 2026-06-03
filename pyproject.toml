@@ -1,0 +1,30 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "secureai-dgx"
+version = "0.1.0"
+description = "SecureAI SDK and API gateway for a local DGX/OpenAI-compatible model server."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+  { name = "360secure" }
+]
+dependencies = [
+  "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+server = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+secureai = "secureai_server.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["SecureAI", "secureai_server"]

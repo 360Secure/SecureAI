@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+secureai.db
+secureai-server.log
+*.egg-info/
+dist/
+build/
