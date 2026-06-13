@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "secureai-dgx"
-version = "0.1.0"
+version = "0.1.1"
 description = "SecureAI SDK and API gateway for a local DGX/OpenAI-compatible model server."
 readme = "README.md"
 requires-python = ">=3.10"

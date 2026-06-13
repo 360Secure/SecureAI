@@ -21,7 +21,7 @@ ADMIN_TOKEN = os.getenv("SECUREAI_ADMIN_TOKEN", "change-this-admin-token")
 UPSTREAM_BASE_URL = os.getenv("SECUREAI_UPSTREAM_BASE_URL", "http://127.0.0.1:8001/v1").rstrip("/")
 UPSTREAM_API_KEY = os.getenv("SECUREAI_UPSTREAM_API_KEY", "none")
 
-app = FastAPI(title=APP_NAME, version="0.1.0")
+app = FastAPI(title=APP_NAME, version="0.1.1")
 
 
 class CreateKeyRequest(BaseModel):
@@ -200,7 +200,7 @@ EXAMPLES = [
     ("Low temperature", "print(ai.ask('Write a factual summary', temperature=0.0))"),
     ("Creative mode", "print(ai.ask('Name an AI product', temperature=0.9))"),
     ("Limit output", "print(ai.ask('Give 3 bullets', max_tokens=120))"),
-    ("Custom model", "print(ai.ask('Hello', model='qwen72b-vl'))"),
+    ("Custom model", "print(ai.ask('Hello', model='qwen32b'))"),
     ("Multi-message chat", "print(ai.chat([{'role':'user','content':'Hi'}]))"),
     ("Developer style system", "print(ai.ask('Plan my setup', system='Act like a senior engineer.'))"),
     ("JSON request", "print(ai.ask('Return JSON with name and summary'))"),
@@ -225,8 +225,8 @@ EXAMPLES = [
     ("Table output", "print(ai.ask('Make a markdown table comparing HTTP and HTTPS.'))"),
     ("Error handling", "try: print(ai.ask('Hi'))\nexcept Exception as e: print(e)"),
     ("Environment config", "ai = SecureAI()  # uses SECUREAI_API_KEY and SECUREAI_BASE_URL"),
-    ("Direct base URL", "ai = SecureAI(api_key='sk...', base_url='http://spark:8787/v1')"),
-    ("OpenAI-compatible curl", "curl http://spark:8787/v1/chat/completions -H 'Authorization: Bearer sk...'"),
+    ("Direct base URL", "ai = SecureAI(api_key='sk...', base_url='https://spark.tail4ba90a.ts.net/secureai/v1')"),
+    ("OpenAI-compatible curl", "curl https://spark.tail4ba90a.ts.net/secureai/v1/chat/completions -H 'Authorization: Bearer sk...'"),
     ("Create key with curl", "curl -X POST /admin/api-keys -H 'Authorization: Bearer ADMIN' -d '{\"name\":\"test\"}'"),
     ("Revoke key", "curl -X POST /admin/api-keys/revoke -H 'Authorization: Bearer ADMIN' -d '{\"key_id\":\"key_...\"}'"),
     ("Vision URL", "print(ai.vision('Describe image', 'https://example.com/image.png'))"),
@@ -498,7 +498,7 @@ API_KEYS_PAGE = f"""
       <div class="actions">
         <button onclick="copyText('installCommand')">Copy Download Command</button>
       </div>
-      <pre><code id="installCommand">python3 -m pip install "secureai-dgx[server] @ git+https://github.com/YOUR_USERNAME/SecureAI.git"</code></pre>
+      <pre><code id="installCommand">python3 -m pip install --upgrade --force-reinstall git+https://github.com/360Secure/SecureAI.git</code></pre>
       <p>Local install while this repo is on your Mac:</p>
       <pre><code>cd /Users/360secure/Documents/Doorlock
 python3 -m pip install -e ".[server]"</code></pre>
@@ -559,7 +559,7 @@ python3 -m secureai_server.cli serve --host 0.0.0.0 --port 8787</code></pre>
           <pre><code id="mainExample">import SecureAI as AI
 
 API = "sk-secureai-your-key"
-BASE = "http://spark:8787/v1"
+BASE = "https://spark.tail4ba90a.ts.net/secureai/v1"
 
 print(AI.AskAI(API, base_url=BASE)["What is DGX Spark?"])
 </code></pre>
@@ -569,7 +569,7 @@ print(AI.AskAI(API, base_url=BASE)["What is DGX Spark?"])
           <pre><code id="streamExample">import SecureAI as AI
 
 API = "sk-secureai-your-key"
-BASE = "http://spark:8787/v1"
+BASE = "https://spark.tail4ba90a.ts.net/secureai/v1"
 
 for token in AI.StreamAI(API, base_url=BASE)["Tell me about DGX Spark"]:
     print(token, end="", flush=True)</code></pre>
@@ -585,7 +585,7 @@ for token in AI.StreamAI(API, base_url=BASE)["Tell me about DGX Spark"]:
       <pre><code id="lettersExample">import SecureAI as AI
 
 API = "sk-secureai-your-key"
-BASE = "http://spark:8787/v1"
+BASE = "https://spark.tail4ba90a.ts.net/secureai/v1"
 
 for letter in AI.StreamLettersAI(API, base_url=BASE)["Say SecureAI"]:
     print(letter, end="", flush=True)</code></pre>
@@ -595,7 +595,7 @@ for letter in AI.StreamLettersAI(API, base_url=BASE)["Say SecureAI"]:
       <h2>OpenAI-Compatible API</h2>
       <pre><code>from SecureAI import SecureAI
 
-ai = SecureAI(api_key="sk-secureai-...", base_url="http://spark:8787/v1")
+ai = SecureAI(api_key="sk-secureai-...", base_url="https://spark.tail4ba90a.ts.net/secureai/v1")
 print(ai.ask("What is DGX Spark?"))</code></pre>
       <p class="warning">Keep keys private. Use HTTPS or Tailscale for remote access.</p>
     </section>

@@ -22,12 +22,12 @@ from open_webui.utils.auth import get_verified_user
 router = APIRouter()
 
 KEYS_DB = os.getenv('SECUREAI_KEYS_DB', '/app/backend/data/secureai_api_keys.db')
-DEFAULT_BASE_URL = os.getenv('SECUREAI_DEFAULT_BASE_URL', 'http://spark.tail4ba90a.ts.net/secureai/v1')
-GITHUB_INSTALL = os.getenv('SECUREAI_GITHUB_INSTALL', 'python3 -m pip install git+https://github.com/360Secure/SecureAI.git')
+DEFAULT_BASE_URL = os.getenv('SECUREAI_DEFAULT_BASE_URL', 'https://spark.tail4ba90a.ts.net/secureai/v1')
+GITHUB_INSTALL = os.getenv('SECUREAI_GITHUB_INSTALL', 'python3 -m pip install --upgrade --force-reinstall git+https://github.com/360Secure/SecureAI.git')
 UPSTREAM_BASE_URL = os.getenv('SECUREAI_UPSTREAM_BASE_URL', 'http://172.17.0.1:8001/v1').rstrip('/')
-VLM_UPSTREAM_BASE_URL = os.getenv('SECUREAI_VLM_UPSTREAM_BASE_URL', 'http://172.17.0.1:8002/v1').rstrip('/')
+VLM_UPSTREAM_BASE_URL = os.getenv('SECUREAI_VLM_UPSTREAM_BASE_URL', 'http://172.17.0.1:8001/v1').rstrip('/')
 UPSTREAM_API_KEY = os.getenv('SECUREAI_UPSTREAM_API_KEY', 'none')
-VLM_MODEL = os.getenv('SECUREAI_VLM_MODEL', 'fast-vlm')
+VLM_MODEL = os.getenv('SECUREAI_VLM_MODEL', 'qwen32b')
 SEARCH_BASE_URL = os.getenv('SECUREAI_SEARCH_BASE_URL', 'http://172.17.0.1:8081').rstrip('/')
 MAX_INPUT_TOKENS = int(os.getenv('SECUREAI_MAX_INPUT_TOKENS', '8192'))
 SAFE_INPUT_TOKENS = int(os.getenv('SECUREAI_SAFE_INPUT_TOKENS', '7400'))
@@ -74,7 +74,7 @@ def upstream_headers():
 
 def payload_needs_vlm(payload: Dict[str, Any]) -> bool:
     model = str(payload.get('model') or '').lower()
-    if model in {'fast-vlm', 'qwen3vl-fast', 'qwen3-vl-8b', 'qwen3-vl-32b', 'qwen3vl32', 'qwen/qwen3-vl-32b-instruct'}:
+    if model in {'qwen32b', 'fast-vlm', 'qwen3vl-fast', 'qwen3-vl-8b', 'qwen3-vl-32b', 'qwen3vl32', 'qwen/qwen3-vl-32b-instruct'}:
         return True
     for message in payload.get('messages', []) or []:
         content = message.get('content') if isinstance(message, dict) else None

@@ -13,7 +13,7 @@ python3 -m pip install -e ".[server]"
 GitHub-style install after pushing this repo:
 
 ```bash
-python3 -m pip install git+https://github.com/360Secure/SecureAI.git
+python3 -m pip install --upgrade --force-reinstall git+https://github.com/360Secure/SecureAI.git
 ```
 
 ## API Keys
@@ -21,13 +21,13 @@ python3 -m pip install git+https://github.com/360Secure/SecureAI.git
 Create API keys from Open WebUI:
 
 ```text
-http://spark.tail4ba90a.ts.net/secureai/api-keys
+https://spark.tail4ba90a.ts.net/secureai/api-keys
 ```
 
 The SDK auto-connects to:
 
 ```text
-http://spark.tail4ba90a.ts.net/secureai/v1
+https://spark.tail4ba90a.ts.net/secureai/v1
 ```
 
 ## Python SDK

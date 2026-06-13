@@ -9,7 +9,7 @@ import httpx
 
 
 API = os.getenv("SECUREAI_API_KEY", "")
-DEFAULT_BASE_URL = os.getenv("SECUREAI_BASE_URL", "http://spark.tail4ba90a.ts.net/secureai/v1")
+DEFAULT_BASE_URL = os.getenv("SECUREAI_BASE_URL", "https://spark.tail4ba90a.ts.net/secureai/v1")
 
 
 class SecureAIError(RuntimeError):
@@ -33,7 +33,7 @@ class SecureAI:
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
         model: str = "qwen32b",
-        timeout: float = 120.0,
+        timeout: float = 600.0,
     ) -> None:
         self.api_key = api_key or os.getenv("SECUREAI_API_KEY") or os.getenv("OPENAI_API_KEY")
         self.base_url = (base_url or DEFAULT_BASE_URL).rstrip("/")
